@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+    </ul>
+  </form>
+<script>
+let citiesMap;
+fetch('https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json') 
+	  .then( res => {
+		if(!res.ok) throw new Error(data.error);				
+		return res.json();
+	  })
+  	.then( result => {
+      //Create a list with cities and required info
+      citiesMap = result.map(element => { 
+        return {
+          city: element.city,
+          state: element.state,
+          population: element.population
+        } 
+      })
+    })
+	  .catch(err => {console.log(err)})
+
+document.querySelector('input').addEventListener('keyup', (event) => {
+  // What we are looking for
+  let search = event.target.value;
+  const UL = document.querySelector(`.suggestions`);
+  
+  //Clear all prev results
+  while (UL.firstChild) {
+    UL.removeChild(UL.firstChild);
+  } 
+
+  //If empty input
+  if (!search) {
+    return;
+  }
+
+  //Find in our array
+  let match = citiesMap.filter((element) => element.city.includes(search) || element.state.includes(search));
+
+  //Build UI
+  match.forEach((item) => {
+    let listItem = document.createElement('li');
+    listItem.innerHTML = `<p>${item.city.replace(search, `<span class="hl">${search}</span>`)}, ${item.state.replace(search, `<span class="hl">${search}</span>`)} <span class="population">${item.population}</span></p>`;
+    UL.append(listItem);
+  })
+})
+</script>
+</body>
+</html>
