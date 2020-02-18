@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+  const pressedArray = [];
+  const secretCode = 'oksi';
+  window.addEventListener('keyup', (e) => {
+    pressedArray.push(e.key);
+    if (pressedArray.length > secretCode.length) {
+      pressedArray.shift();
+    }
+    if (pressedArray.join(``) == secretCode) {
+      cornify_add();
+    }
+  })
+</script>
+</body>
+</html>
